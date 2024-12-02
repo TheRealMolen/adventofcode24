@@ -41,12 +41,13 @@ int main()
 
     {
         TIME_SCOPE(old);
+
+        run_day1();
     }
     {
         TIME_SCOPE(new);
 
-        run_day1();
-        // run_day2();
+        run_day2();
         // run_day3();
         // run_day4();
         // run_day5();
