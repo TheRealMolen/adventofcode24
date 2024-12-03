@@ -2,37 +2,26 @@
 #include "harness.h"
 
 
-bool isSafe(const vector<int>& report)
+bool isSafe(const auto& report)
 {
-    auto it = begin(report);
+    optional<bool> reportAsc;
 
-    int prev = *it;
-    ++it;
-
-    int curr = *it;
-    ++it;
-
-    if (prev == curr)
-        return false;
-
-    int delta = curr - prev;
-    if (abs(delta) > 3)
-        return false;
-
-    bool asc = delta > 0;
-
-    while (it != end(report))
+    for (auto ab : views::pairwise(report))
     {
-        prev = curr;
-        curr = *it;
-        ++it;
+        int prev = get<0>(ab);
+        int curr = get<1>(ab);
 
-        delta = curr - prev;
+        int delta = curr - prev;
+        bool asc = delta > 0;
 
-        if (((delta > 0) != asc) || (abs(delta) > 3) || (delta == 0))
-        {
+        if (reportAsc.has_value() && asc != reportAsc.value())
             return false;
-        }
+        reportAsc = asc;
+
+        if (delta == 0)
+            return false;
+        if (abs(delta) > 3)
+            return false;
     }
 
     return true;
