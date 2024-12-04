@@ -152,10 +152,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="chargrid.h" />
     <ClInclude Include="harness.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="day4.cpp" />
     <ClCompile Include="day3.cpp" />
     <ClCompile Include="day2.cpp" />
     <ClCompile Include="day1.cpp" />
@@ -171,6 +173,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="data\day4.txt" />
     <Text Include="data\day3.txt" />
     <Text Include="data\day1.txt" />
     <Text Include="data\day2.txt" />
