@@ -2,12 +2,10 @@
 #include "harness.h"
 #include "pt2.h"
 
-#include <execution>
 
+enum class PatrolDir { Up, Right, Down, Left };
 
-enum class Dir { Up, Right, Down, Left };
-
-inline u8 dirBit(Dir d)
+inline u8 dirBit(PatrolDir d)
 {
     return 1 << int(d);
 }
@@ -111,7 +109,7 @@ int day6(const stringlist& input)
 {
     PatrolMap m(input);
     Pt2i p = m.start;
-    Dir d = Dir::Up;
+    PatrolDir d = PatrolDir::Up;
 
     for (;;)
     {
@@ -123,7 +121,7 @@ int day6(const stringlist& input)
 
         if (m(np) == PatrolMap::Obstacle)
         {
-            d = Dir((int(d) + 1) & 3);
+            d = PatrolDir((int(d) + 1) & 3);
         }
         else
         {
@@ -141,7 +139,7 @@ set<Pt2i> gatherPotentialObstacles(const stringlist& input)
 
     PatrolMap m(input);
     Pt2i p = m.start;
-    Dir d = Dir::Up;
+    PatrolDir d = PatrolDir::Up;
     for (;;)
     {
         m(p) |= dirBit(d);
@@ -155,7 +153,7 @@ set<Pt2i> gatherPotentialObstacles(const stringlist& input)
 
         if (m(np) == PatrolMap::Obstacle)
         {
-            d = Dir((int(d) + 1) & 3);
+            d = PatrolDir((int(d) + 1) & 3);
         }
         else
         {
@@ -183,7 +181,7 @@ int day6_2(const stringlist& input)
             m(obstaclePos) = PatrolMap::Obstacle;
 
             Pt2i p = m.start;
-            Dir d = Dir::Up;
+            PatrolDir d = PatrolDir::Up;
             for (;;)
             {
                 u8* cell = &m(p);
@@ -198,7 +196,7 @@ int day6_2(const stringlist& input)
 
                 if (m(np) == PatrolMap::Obstacle)
                 {
-                    d = Dir((int(d) + 1) & 3);
+                    d = PatrolDir((int(d) + 1) & 3);
                 }
                 else
                 {
