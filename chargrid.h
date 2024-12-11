@@ -6,9 +6,45 @@
 #include <ranges>
 #include <vector>
 
+#include "pt2.h"
+
 using namespace std;
 
-using CharGrid = vector<string>;
+
+class CharGrid : public vector<string>
+{
+public:
+    using Base = vector<string>;
+
+    CharGrid() = default;
+    CharGrid(const vector<string>& input) : Base(input), mWidth(int(input.front().size())), mHeight(int(input.size()))
+    { /**/ }
+
+    char& operator()(int x, int y)
+    {
+        return (*this)[y][x];
+    }
+    char operator()(int x, int y) const
+    {
+        return (*this)[y][x];
+    }
+
+    char& operator()(const Pt2i& p)
+    {
+        return (*this)[p.y][p.x];
+    }
+    char operator()(const Pt2i& p) const
+    {
+        return (*this)[p.y][p.x];
+    }
+
+    int w() const { return mWidth; }
+    int h() const { return mHeight; }
+
+protected:
+    int mWidth = 0;
+    int mHeight = 0;
+};
 
 
 inline ostream& operator<<(ostream& os, const CharGrid& grid)

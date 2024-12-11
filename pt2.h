@@ -57,6 +57,7 @@ struct Pt2
 using Pt2i = Pt2<int>;
 using Pt2d = Pt2<double>;
 using Pt2i16 = Pt2<int16_t>;
+using Pt2u8 = Pt2<u8>;
 
 namespace std {
 template<>
@@ -65,6 +66,14 @@ struct hash<Pt2i>
     size_t operator()(const Pt2i& p) const
     {
         return hash<int>{}(p.x) ^ hash<int>{}(p.y);
+    }
+};
+template<>
+struct hash<Pt2u8>
+{
+    size_t operator()(const Pt2u8& p) const
+    {
+        return hash<u16>{}(p.x | (u16(p.y) << 8));
     }
 };
 } // std
