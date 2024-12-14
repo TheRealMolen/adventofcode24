@@ -38,6 +38,10 @@ struct Pt2
     {
         return type{ x * scalar, y * scalar };
     }
+    type operator-() const
+    {
+        return { -x, -y };
+    }
 
     auto operator<=>(const type& rhs) const = default;
 
@@ -52,10 +56,21 @@ struct Pt2
             y *= sgn * -1;
         }
     }
+
+    type perp() const
+    {
+        return { y, -x };
+    }
+
+    el_type dot(const type& other) const
+    {
+        return (x * other.x) + (y * other.y);
+    }
 };
 
 using Pt2i = Pt2<int>;
 using Pt2d = Pt2<double>;
+using Pt2i64 = Pt2<i64>;
 using Pt2i16 = Pt2<int16_t>;
 using Pt2u8 = Pt2<u8>;
 
