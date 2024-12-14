@@ -81,6 +81,6 @@ struct hash<Pt2u8>
 template<typename T>
 ostream& operator<<(ostream& os, const Pt2<T>& pt)
 {
-    os << "(" << pt.x << ", " << pt.y << ")";
+    os << "(" << i64(pt.x) << ", " << i64(pt.y) << ")";
     return os;
 }
