@@ -7,7 +7,7 @@
 i64 findMinTokens(Pt2i64 moveA, Pt2i64 moveB, Pt2i64 prize)
 {
     // find intersection of line A thru origin and line B thru P
-    // => find s & t such that: sA = P + tB
+    // => find s & t such that: sA = P - tB
     const Pt2i64 perpA = moveA.perp();
     const Pt2i64 perpB = moveB.perp();
     i64 collinearityA = moveA.dot(perpB);
