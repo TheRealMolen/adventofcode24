@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "harness.h"
 
+#include <regex>
+
 
 i64 day3(const string& input)
 {

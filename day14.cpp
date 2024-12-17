@@ -43,29 +43,6 @@ i64 day14(const stringlist& input, int w=101, int h=103, int ticks=100)
         }
     }
 
-    //for (int y = 0; y < h; ++y)
-    //{
-    //    if (y != midH)
-    //    {
-    //        for (int x = 0; x < w; ++x)
-    //        {
-    //            if (x == midW)
-    //            {
-    //                cout << " ";
-    //                continue;
-    //            }
-
-    //            int robots = robotsPerCell[x + (y * w)];
-    //            if (robots == 0)
-    //                cout << ".";
-    //            else
-    //                cout << char('0' + robots);
-    //        }
-    //    }
-
-    //    cout << endl;
-    //}
-
     i64 safety = 1;
     for (int numRobots : robotsPerQuadrant)
         safety *= numRobots;
