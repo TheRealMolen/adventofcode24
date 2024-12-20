@@ -3,21 +3,6 @@
 #include "pt2.h"
 
 
-void erase_swap(auto& vec, auto& itToDelete)
-{
-    if (vec.size() > 1)
-    {
-        iter_swap(itToDelete, end(vec) - 1);
-        vec.pop_back();
-    }
-    else
-    {
-        vec.clear();
-    }
-}
-
-
-
 enum ERdir : u8 { East, South, West, North };
 constexpr Pt2i kRdirVec[] = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
 
@@ -130,7 +115,7 @@ int day16(const stringlist& input)
 
         auto itCheapest = ranges::min_element(open, {}, &RdToTry::cost);
         RdToTry currTry = *itCheapest;
-        erase_swap(open, itCheapest);
+        erase_unsorted(open, itCheapest);
 
         if (itEndCell->visited() && currTry.cost > itEndCell->bestScore)
             continue;

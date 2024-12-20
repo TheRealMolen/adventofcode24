@@ -120,7 +120,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <DisableSpecificWarnings>26451</DisableSpecificWarnings>
+      <DisableSpecificWarnings>26451;4505</DisableSpecificWarnings>
       <SupportJustMyCode>false</SupportJustMyCode>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
@@ -141,7 +141,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <DisableSpecificWarnings>26451</DisableSpecificWarnings>
+      <DisableSpecificWarnings>26451;4505</DisableSpecificWarnings>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
