@@ -157,6 +157,8 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="day19.cpp" />
+    <ClCompile Include="day18.cpp" />
     <ClCompile Include="day17.cpp" />
     <ClCompile Include="day16.cpp" />
     <ClCompile Include="day15.cpp" />
@@ -186,6 +188,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="data\day19.txt" />
+    <Text Include="data\day18.txt" />
     <Text Include="data\day17.txt" />
     <Text Include="data\day16.txt" />
     <Text Include="data\day15.txt" />
