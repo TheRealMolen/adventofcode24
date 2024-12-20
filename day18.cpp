@@ -144,7 +144,6 @@ bool is_completable_after(const auto& drops, int gridMax = 70)
     vector<char> grid(w * h, '.');
     for (auto& pos : drops)
         grid[pos.x + (pos.y * w)] = '#';
-  //  dumpGrid(grid, w, h);
 
     const Pt2i8 startPos{ 0, 0 };
     const Pt2i8 endPos{ i8(w - 1), i8(h - 1) };
@@ -156,11 +155,11 @@ bool is_completable_after(const auto& drops, int gridMax = 70)
 
     auto addTry = [w, &grid, &open, &bestCost](Pt2i8 newPos, int newCost)
         {
-            auto itCell = begin(grid) + (newPos.x + w * newPos.y);
+            auto itCell = data(grid) + (newPos.x + w * newPos.y);
             if (*itCell == '#')
                 return;
 
-            auto itBestCost = begin(bestCost) + (newPos.x + w * newPos.y);
+            auto itBestCost = data(bestCost) + (newPos.x + w * newPos.y);
             if (*itBestCost > newCost)
             {
                 *itBestCost = i16(newCost);
@@ -210,15 +209,11 @@ bool is_completable_after(const auto& drops, int gridMax = 70)
         erase_unsorted(open, itCheapest);
 
         if (pos == endPos)
-        {
-           // dumpCosts(bestCost, w, h);
             return true;
-        }
 
         addTriesFromCell(pos, cellCost(pos));
     }
 
-   // dumpCosts(bestCost, w, h);
     return false;
 }
 
@@ -235,9 +230,8 @@ string day18_2(const stringlist& input, int gridMax = 70)
     drops.reserve(size(input));
     for (auto& line : input)
     {
-        istringstream is(line);
         int x, y;
-        is >> x >> "," >> y;
+        sscanf_s(line.c_str(), "%d,%d", &x, &y);
         drops.emplace_back(i8(x), i8(y));
     }
 
