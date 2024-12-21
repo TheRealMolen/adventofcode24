@@ -94,6 +94,7 @@ def decodeRemainder(target, i, a):
         bposs = bposs & 7
 
         if bposs == target[i]:
+            print('found viable guess for', i, ':', guess)
             decoded = decodeRemainder(target, i+1, aposs)
             if decoded:
                 return decoded
@@ -105,23 +106,6 @@ def runProgReverse(output):
     
     target = [v for v in reversed(output)]
     a = decodeRemainder(target, 0, 0)
-
-    # for v in reversed(output):
-    #     print(f'reversing {v}. existing A={a}');
-
-    #     for guess in range(8):
-    #         aposs = (a * 8) + guess
-    #         bposs = guess ^ 1
-    #         cposs = aposs >> bposs
-    #         bposs = bposs ^ 4
-    #         bposs = bposs ^ cposs
-    #         bposs = bposs & 7
-
-    #         if bposs == v:
-    #             a = aposs
-    #     else:
-    #         print('badness')
-    #         a = a * 8
 
     return a
 
@@ -135,3 +119,8 @@ A = runProgReverse(extract_program(INPUT))
 print(A)
 print('GOAL:\n  ' + repr(extract_program(INPUT)))
 print('ACTUAL:\n  ' + repr(runProg(A)))
+
+
+SAMPLE_PROG = [0,3,5,4,3,0]
+disassemble(SAMPLE_PROG)
+

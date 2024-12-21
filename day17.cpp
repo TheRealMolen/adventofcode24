@@ -2,21 +2,55 @@
 #include "harness.h"
 
 
+enum EOpCode { ASHR, BXL, BST, JNZ, BXC, OUT_, BSHR, CSHR };
+
+
 class Machine17
 {
 public:
     Machine17(const stringlist& input);
 
     void run();
-    int checkForQuine() const;  // 1 == yes, -1 == no, 0 == maybe
+    void reset()
+    {
+        mIP = 0;
+        mOutput.clear();
+    }
 
     i64 getReg(int i) const { return mRegs[i]; }
-    void setReg(int i, i64 val) { mRegs[i] = val; }
+    void setRegA(i64 val) { mRegs[0] = val; }
 
-    string getOutput() const;
+    const vector<u16>& getProgram() const { return mProgram; }
+    const vector<u8>& getRawOutput() const { return mOutput; }
+    string getOutputStr() const;
+
+    // check that the program has "JNZ 0" at the end
+    bool hasLoopAtEnd() const
+    {
+        return size(mProgram) > 1 && (mProgram.back() == 0) && (*(end(mProgram) - 2) == JNZ);
+    }
+
+    void dropTrailingJump()
+    {
+        assert(hasLoopAtEnd());
+        mProgram.erase(end(mProgram) - 2, end(mProgram));
+    }
 
 private:
     void tick();
+
+    i64 getComboVal(int operand)
+    {
+        if (operand < 4)
+            return operand;
+        assert(operand < 7);
+        return mRegs[operand - 4];
+    };
+    i64 getShrVal(int operand)
+    {
+        i64 num = mRegs[0];
+        return num >> getComboVal(operand);
+    };
 
 
     i64 mRegs[3];
@@ -24,7 +58,6 @@ private:
     vector<u16> mProgram;
 
     vector<u8> mOutput;
-    bool mPotentialQuine = true;
 };
 
 Machine17::Machine17(const stringlist& input)
@@ -52,42 +85,15 @@ void Machine17::run()
         tick();
 }
 
-int Machine17::checkForQuine() const
-{
-    if (!mPotentialQuine)
-        return -1;
-
-    if (size(mOutput) == size(mProgram))
-        return 1;
-
-    return 0;
-}
-
 void Machine17::tick()
 {
-    enum EOpCode { ADV, BXL, BST, JNZ, BXC, OUT_, BDV, CDV };
     EOpCode instruction = EOpCode(mProgram[mIP++]);
     int operand = mProgram[mIP++];
 
-    auto getComboVal = [=, this]() -> i64
-        {
-            if (operand < 4)
-                return operand;
-            assert(operand < 7);
-            return mRegs[operand - 4];
-        };
-
-    auto getDivVal = [=, this, &getComboVal]() -> i64
-        {
-            i64 num = mRegs[0];
-            i32 denom = 1 << getComboVal();
-            return num / denom;
-        };
-
     switch (EOpCode(instruction))
     {
-    case ADV:     // ADV
-        mRegs[0] = getDivVal();
+    case ASHR:     // ADV
+        mRegs[0] = getShrVal(operand);
         break;
 
     case BXL:     // BXL
@@ -95,7 +101,7 @@ void Machine17::tick()
         break;
 
     case BST:     // BST
-        mRegs[1] = getComboVal() & 7;
+        mRegs[1] = getComboVal(operand) & 7;
         break;
 
     case JNZ:     // JNZ
@@ -108,21 +114,15 @@ void Machine17::tick()
         break;
 
     case OUT_:     // OUT
-        mOutput.push_back(u8(getComboVal() & 0x7));
-
-        if (size(mOutput) > size(mProgram))
-            mPotentialQuine = false;
-        else if (mOutput.back() != mProgram[size(mOutput) - 1])
-            mPotentialQuine = false;
-
+        mOutput.push_back(u8(getComboVal(operand) & 0x7));
         break;
 
-    case BDV:     // BDV
-        mRegs[1] = getDivVal();
+    case BSHR:     // BDV
+        mRegs[1] = getShrVal(operand);
         break;
 
-    case CDV:     // CDV
-        mRegs[2] = getDivVal();
+    case CSHR:     // CDV
+        mRegs[2] = getShrVal(operand);
         break;
 
     default:
@@ -130,7 +130,7 @@ void Machine17::tick()
     }
 }
 
-string Machine17::getOutput() const
+string Machine17::getOutputStr() const
 {
     ostringstream os;
     for (const u8& i : mOutput)
@@ -151,7 +151,44 @@ string day17(const stringlist& input)
 
     machine.run();
 
-    return machine.getOutput();
+    return machine.getOutputStr();
+}
+
+
+i64 decodeRemainder(const vector<u16>& target, Machine17 machine, size_t ix, i64 prevA)
+{
+    if (ix == size(target))
+        return prevA;
+
+    for (int guess = 0; guess < 8; ++guess)
+    {
+        i64 aGuess = (prevA << 3) + guess;
+
+        machine.reset();
+        machine.setRegA(aGuess);
+        machine.run();
+
+        if (machine.getRawOutput().front() == target[ix])
+        {
+            i64 decodedA = decodeRemainder(target, machine, ix + 1, aGuess);
+            if (decodedA > 0)
+                return decodedA;
+        }
+    }
+
+    return -1;
+}
+
+i64 day17_2(const stringlist& input)
+{
+    Machine17 rawMachine(input);
+
+    Machine17 machine(rawMachine);
+    machine.dropTrailingJump();
+
+    vector<u16> target = rawMachine.getProgram() | views::reverse | ranges::to<vector<u16>>();
+
+    return decodeRemainder(target, machine, 0, 0);
 }
 
 
@@ -183,5 +220,6 @@ Program: 0,3,5,4,3,0)";
     test("4,6,3,5,6,3,5,2,1,0", day17(READ(sample)));
     gogogo(day17(LOAD(17)));
 
-    skip("done in python");
+    test(117440, day17_2(READ(sample3)));
+    gogogo(day17_2(LOAD(17)));
 }
